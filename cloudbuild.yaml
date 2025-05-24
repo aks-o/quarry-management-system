@@ -1,0 +1,32 @@
+﻿steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io//quarry-api', '.']
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io//quarry-api']
+
+  # Deploy container to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'quarry-api'
+      - '--image'
+      - 'gcr.io//quarry-api'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars'
+      - 'DATABASE_URL=-NoNewlineCLOUD_SQL_CONNECTION_NAME'
+      - 'SECRET_KEY=your-secret-key'
+      - 'ACCESS_TOKEN_EXPIRE_MINUTES=1440'
+      - 'FIRST_SUPERUSER_EMAIL=admin@example.com'
+      - 'FIRST_SUPERUSER_PASSWORD=changethis'
+
+# Images to store in Container Registry
+images: ['gcr.io//quarry-api']
