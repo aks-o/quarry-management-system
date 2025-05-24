@@ -1,6 +1,6 @@
 ﻿services:
   - type: web
-    name: quarry-management
+    name: quarry-api
     env: python
     buildCommand: pip install -r requirements.txt && alembic upgrade head
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port 
@@ -12,6 +12,7 @@
           name: quarry-db
           property: connectionString
     plan: free
+
 databases:
   - name: quarry-db
     databaseName: quarry
